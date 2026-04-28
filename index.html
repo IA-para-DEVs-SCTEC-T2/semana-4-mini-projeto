@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projeto</title>
+</head>
+<body>
+
+  <script>
+    function has_duplicate(nums) {
+      const seen = new Set();
+
+      for (const n of nums) {
+        if (seen.has(n)) {
+          return true;
+        }
+        seen.add(n);
+      }
+
+      return false;
+    }
+
+    const a = has_duplicate([1, 2, 3, 4]);
+    const b = has_duplicate([1, 2, 3, 1]);
+
+    console.log(a);
+    console.log(b);
+  </script>
+</body>
+</html>
