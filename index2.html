@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verificador de Duplicatas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      background: #f0f2f5;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 32px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+    }
+    h1 { margin-top: 0; color: #333; }
+    #resultado {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      display: none;
+    }
+    .duplicado { background: #ffe0e0; color: #c0392b; }
+    .sem-duplicata { background: #e0ffe4; color: #27ae60; }
+    .cancelado { background: #f5f5f5; color: #888; }
+    #lista { margin-top: 12px; color: #555; font-size: 0.95rem; }
+    button {
+      margin-top: 20px;
+      padding: 10px 24px;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button:hover { background: #357abd; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Verificador de Duplicatas</h1>
+    <p>Clique no botão abaixo para inserir uma lista de inteiros e verificar se há duplicatas.</p>
+    <button onclick="verificarDuplicatas()">Inserir números</button>
+    <div id="lista"></div>
+    <div id="resultado"></div>
+  </div>
+
+  <script>
+    function hasDuplicates(arr) {
+      return arr.length !== new Set(arr).size;
+    }
+
+    function verificarDuplicatas() {
+      const input = prompt(
+        "Digite inteiros separados por vírgula e pressione OK.\n\n" +
+        "Exemplo: 1, 2, 3, 4, 2\n\n" +
+        "⚠️ Use apenas números inteiros separados por vírgula.\n" +
+        "Espaços entre os números são permitidos."
+      );
+
+      const resultado = document.getElementById("resultado");
+      const listaEl = document.getElementById("lista");
+
+      if (input === null) {
+        resultado.className = "cancelado";
+        resultado.textContent = "Operação cancelada.";
+        resultado.style.display = "block";
+        listaEl.textContent = "";
+        return;
+      }
+
+      const partes = input.split(",").map(s => s.trim()).filter(s => s !== "");
+
+      if (partes.length === 0) {
+        resultado.className = "cancelado";
+        resultado.textContent = "Nenhum número foi informado.";
+        resultado.style.display = "block";
+        listaEl.textContent = "";
+        return;
+      }
+
+      const invalidos = partes.filter(p => !/^-?\d+$/.test(p));
+      if (invalidos.length > 0) {
+        resultado.className = "cancelado";
+        resultado.textContent = `Entrada inválida: "${invalidos.join('", "')}" não são inteiros.`;
+        resultado.style.display = "block";
+        listaEl.textContent = "";
+        return;
+      }
+
+      const numeros = partes.map(Number);
+      listaEl.textContent = `Lista informada: [${numeros.join(", ")}]`;
+
+      if (hasDuplicates(numeros)) {
+        const duplicados = numeros.filter((n, i) => numeros.indexOf(n) !== i);
+        const unicos = [...new Set(duplicados)];
+        resultado.className = "duplicado";
+        resultado.textContent = `✗ Duplicatas encontradas: ${unicos.join(", ")}`;
+      } else {
+        resultado.className = "sem-duplicata";
+        resultado.textContent = "✓ Nenhuma duplicata encontrada.";
+      }
+
+      resultado.style.display = "block";
+    }
+
+    // Abre automaticamente ao carregar a página
+    window.onload = verificarDuplicatas;
+  </script>
+</body>
+</html>
